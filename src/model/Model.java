@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Model {
 
 	private String equation;
-	private ArrayList<Object> eq;
+	private ArrayList<Object> eq = new ArrayList<Object>();
 	private int pixels[][];
 	private ArrayList<Double> xPixels;
 	private IM2VAdapter myAdapter;
@@ -28,8 +28,11 @@ public class Model {
 	public void calculate(int lx, int ux, int ly, int uy, String inEq, int px, int py) {
 		
 		calculateAxes(lx,ux,ly,uy,inEq,px,py);
+		easyPrint(eq);
 		reduceEquation();
+		easyPrint(eq);
 		removeExtraCharacters();
+		easyPrint(eq);
 		initXPixels(lx, ux);
 		doEquation(ly, uy);
 		myAdapter.update();
@@ -154,8 +157,6 @@ public class Model {
 			double myVal = xPixels.get(x);
 			double yVal = runEquation(myVal);
 			
-			easyPrint(myVal, yVal);
-			
 			if(yVal == 0)
 			{
 				for(int a = 0; a < height; a++)
@@ -191,6 +192,7 @@ public class Model {
 		ArrayList<Object> temp = new ArrayList<Object>();
 		
 		//Replace x with its value
+		
 		for(Object a: eq)
 		{
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
@@ -206,136 +208,78 @@ public class Model {
 				temp.add(intToDouble);
 			}
 		}
-		
 		//easyPrint(temp);
 		
-		ArrayList<Integer> indexesToRemove = new ArrayList<Integer>();
-		
-		//Parse commands
-		int ind =0;
-		for(Object a : temp)
+		//Calculate ^
+		while(temp.contains('^'))
 		{
-			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
-			{
-				if((char) a == '^')
-				{
-					temp.set(ind, Math.pow(((double) temp.get(ind-1)), (double) temp.get(ind + 1)));
-					indexesToRemove.add(ind-1);
-					indexesToRemove.add(ind+1);
-				}
-			}
-			ind++;
+			int ind = temp.indexOf('^');
+			Double a = (Double) temp.get(ind-1);
+			Double b = (Double) temp.get(ind+1);
+			temp.set(ind, Math.pow(a,b));
+			
+			//remove the latter number first
+			//in order to preserve index order for first
+			temp.remove(ind+1);
+			temp.remove(ind-1);
 		}
 		
-		for(int a = 0; a < indexesToRemove.size(); a++)
+		//Calculate *
+		while(temp.contains('*'))
 		{
-			temp.remove((int)indexesToRemove.get(a));
-			for(int b = a + 1; b < indexesToRemove.size(); b++)
-				indexesToRemove.set(b, indexesToRemove.get(b) - 1);
+			int ind = temp.indexOf('*');
+			Double a = (Double) temp.get(ind-1);
+			Double b = (Double) temp.get(ind+1);
+			temp.set(ind, a * b);
+			
+			//remove the latter number first
+			//in order to preserve index order for first
+			temp.remove(ind+1);
+			temp.remove(ind-1);
 		}
 		
-		//easyPrint(temp);
-		indexesToRemove = new ArrayList<Integer>();
-		
-		//Parse commands
-		ind =0;
-		for(Object a : temp)
+		//Calculate *
+		while(temp.contains('/'))
 		{
-			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
-			{
-				if((char) a == '*')
-				{
-					temp.set(ind, (double) temp.get(ind-1)*(double) temp.get(ind + 1));
-					indexesToRemove.add(ind-1);
-					indexesToRemove.add(ind+1);
-				}
-			}
-			ind++;
+			int ind = temp.indexOf('/');
+			Double a = (Double) temp.get(ind-1);
+			Double b = (Double) temp.get(ind+1);
+			temp.set(ind, a / b);
+			
+			//remove the latter number first
+			//in order to preserve index order for first
+			temp.remove(ind+1);
+			temp.remove(ind-1);
 		}
 		
-		for(int a = 0; a < indexesToRemove.size(); a++)
+		//Calculate *
+		while(temp.contains('+'))
 		{
-			temp.remove((int)indexesToRemove.get(a));
-			for(int b = a + 1; b < indexesToRemove.size(); b++)
-				indexesToRemove.set(b, indexesToRemove.get(b) - 1);
+			int ind = temp.indexOf('+');
+			Double a = (Double) temp.get(ind-1);
+			Double b = (Double) temp.get(ind+1);
+			temp.set(ind, a + b);
+			
+			//remove the latter number first
+			//in order to preserve index order for first
+			temp.remove(ind+1);
+			temp.remove(ind-1);
 		}
 		
-		indexesToRemove = new ArrayList<Integer>();
-		
-		//Parse commands
-		ind =0;
-		for(Object a : temp)
+		//Calculate *
+		while(temp.contains('-'))
 		{
-			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
-			{
-				if((char) a == '/')
-				{
-					temp.set(ind, (double) temp.get(ind-1)/(double) temp.get(ind + 1));
-					indexesToRemove.add(ind-1);
-					indexesToRemove.add(ind+1);
-				}
-			}
-			ind++;
+			int ind = temp.indexOf('-');
+			Double a = (Double) temp.get(ind-1);
+			Double b = (Double) temp.get(ind+1);
+			temp.set(ind, a - b);
+			
+			//remove the latter number first
+			//in order to preserve index order for first
+			temp.remove(ind+1);
+			temp.remove(ind-1);
 		}
-		
-		for(int a = 0; a < indexesToRemove.size(); a++)
-		{
-			temp.remove((int)indexesToRemove.get(a));
-			for(int b = a + 1; b < indexesToRemove.size(); b++)
-				indexesToRemove.set(b, indexesToRemove.get(b) - 1);
-		}
-		
-		
-		indexesToRemove = new ArrayList<Integer>();
-		
-		//Parse commands
-		ind =0;
-		for(Object a : temp)
-		{
-			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
-			{
-				if((char) a == '+')
-				{
-					temp.set(ind, (double) temp.get(ind-1)+(double) temp.get(ind + 1));
-					indexesToRemove.add(ind-1);
-					indexesToRemove.add(ind+1);
-				}
-			}
-			ind++;
-		}
-		
-		for(int a = 0; a < indexesToRemove.size(); a++)
-		{
-			temp.remove((int)indexesToRemove.get(a));
-			for(int b = a + 1; b < indexesToRemove.size(); b++)
-				indexesToRemove.set(b, indexesToRemove.get(b) - 1);
-		}
-		
-		indexesToRemove = new ArrayList<Integer>();
-		
-		//Parse commands
-		ind =0;
-		for(Object a : temp)
-		{
-			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
-			{
-				if((char) a == '-')
-				{
-					temp.set(ind, (double) temp.get(ind-1)-(double) temp.get(ind + 1));
-					indexesToRemove.add(ind-1);
-					indexesToRemove.add(ind+1);
-				}
-			}
-			ind++;
-		}
-		
-		for(int a = 0; a < indexesToRemove.size(); a++)
-		{
-			temp.remove((int)indexesToRemove.get(a));
-			for(int b = a + 1; b < indexesToRemove.size(); b++)
-				indexesToRemove.set(b, indexesToRemove.get(b) - 1);
-		}
-		
+		easyPrint(temp);
 		return (double) temp.get(0);
 	}
 	
