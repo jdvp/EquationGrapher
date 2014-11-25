@@ -141,7 +141,7 @@ public class Model {
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
 			{
 				String me = "" + (char) a;
-				if(me.matches("[x+-/*^]"))
+				if(me.matches("[x+-/*^()]"))
 				{
 					tempEq.add(a);
 				}
@@ -171,6 +171,12 @@ public class Model {
 		}
 	}
 	
+	/**
+	 * Graphs the equation
+	 * 
+	 * @param ly The lower y bound
+	 * @param uy The upper y bound
+	 */
 	public void doEquation(int ly, int uy)
 	{
 	
@@ -194,35 +200,21 @@ public class Model {
 		//Therefore, we set the lowest value in the x range to zero
 		xPixels.set(closestToZeroIndex, 0.0);
 		
+		//Draw Y Axis
 		for(int a = 0; a < height; a ++)
 			pixels[closestToZeroIndex][a] = 1;
-		//easyPrint(xPixels);
 		
-		
-		int closestToZeroIndexY = -1;
-		closestVal = Double.POSITIVE_INFINITY;
 		
 		//For every x value, calculate a y value
 		for(int x = 0; x < width; x++)
 		{
 			double myVal = xPixels.get(x);
-			double yVal = runEquation(myVal);
-			
-			if(Math.abs(yVal) < closestVal)
-			{
-				closestToZeroIndexY = x;
-				closestVal = Math.abs(yVal);
-			}
+			double yVal = runEquation(eq, myVal);
 			
 			//Make sure y is graphable and then graph it
 			if(yVal >= ly && yVal <= uy)
 			{
 				int myPixelVal = valueToPixel(yVal, ly, uy);
-				if(yVal == 0)
-				{
-					for(int b = 0; b < width; b++)
-						pixels[b][myPixelVal] = 1;
-				}
 				if(myPixelVal >=0 && myPixelVal < height)
 				{
 					pixels[x][myPixelVal] = 1;
@@ -230,6 +222,7 @@ public class Model {
 			}
 		}
 		
+		//Draw X Axis
 		for(int x = 0; x<width; x++)
 			pixels[x][valueToPixel(0, ly, uy)] = 1;
 	}
@@ -255,13 +248,13 @@ public class Model {
 	 * @param xVal The value to determine a y value for
 	 * @return y the value that corresponds to f(x)
 	 */
-	public double runEquation(double xVal)
+	public double runEquation(ArrayList<Object> equation, double xVal)
 	{
 		ArrayList<Object> temp = new ArrayList<Object>();
 		
 		//Replace x with its value
 		
-		for(Object a: eq)
+		for(Object a: equation)
 		{
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
 			{
@@ -275,9 +268,33 @@ public class Model {
 				Double intToDouble = ((Integer) a) * 1.0;
 				temp.add(intToDouble);
 			}
+			else
+			{
+				temp.add(a);
+			}
 		}
 		//easyPrint(temp);
 		
+		while(temp.contains('('))
+		{
+			int ind = temp.indexOf('(');
+			ArrayList<Object> temp2 = new ArrayList<Object>();
+			int lastInd = temp.lastIndexOf(')');
+			for(int i = ind+1; i < lastInd; i++)
+			{
+				temp2.add(temp.get(i));
+			}
+			easyPrint(temp);
+			easyPrint(temp2);
+			temp.set(ind, runEquation(temp2, xVal));
+			easyPrint(temp);
+			for(int i = lastInd; i > ind; i--)
+			{
+				temp.remove(i);
+			}
+			easyPrint(temp);
+		}
+		//easyPrint(temp);
 		//Calculate ^
 		while(temp.contains('^'))
 		{
@@ -323,6 +340,7 @@ public class Model {
 		//Calculate *
 		while(temp.contains('+'))
 		{
+			
 			int ind = temp.indexOf('+');
 			Double a = (Double) temp.get(ind-1);
 			Double b = (Double) temp.get(ind+1);
