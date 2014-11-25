@@ -36,13 +36,10 @@ public class Model {
 	public void calculate(int lx, int ux, int ly, int uy, String inEq) {
 		
 		//calculateAxes(lx,ux,ly,uy,inEq,px,py);
-		//easyPrint(eq);
 		equation = inEq;
 		
 		reduceEquation();
-		//easyPrint(eq);
 		removeExtraCharacters();
-		//easyPrint(eq);
 		initXPixels(lx, ux);
 		doEquation(ly, uy);
 		myAdapter.update();
@@ -195,14 +192,15 @@ public class Model {
 				closestToZeroIndex = x;
 			}
 		}
-		easyPrint("Closest to zero", closestToZeroIndex);
+		
 		//If there is no zero in the x range, grpahing will not work properly
 		//Therefore, we set the lowest value in the x range to zero
 		xPixels.set(closestToZeroIndex, 0.0);
 		
 		//Draw Y Axis
-		for(int a = 0; a < height; a ++)
-			pixels[closestToZeroIndex][a] = 1;
+		if(!xPixels.get(0).equals(0.0))
+			for(int a = 0; a < height; a ++)
+				pixels[closestToZeroIndex][a] = 1;
 		
 		
 		//For every x value, calculate a y value
@@ -223,8 +221,9 @@ public class Model {
 		}
 		
 		//Draw X Axis
-		for(int x = 0; x<width; x++)
-			pixels[x][valueToPixel(0, ly, uy)] = 1;
+		if(ly < 0 && uy > 0)
+			for(int x = 0; x<width; x++)
+				pixels[x][valueToPixel(0, ly, uy)] = 1;
 	}
 	
 	/**
@@ -238,7 +237,6 @@ public class Model {
 	 */
 	public int valueToPixel(double value, int ly, int uy)
 	{
-		//easyPrint(value, ly, uy);
 		return height - (int)((height * (value - 1.0 * ly))/(1.0 *uy - 1.0 * ly));
 	}
 	
@@ -273,7 +271,6 @@ public class Model {
 				temp.add(a);
 			}
 		}
-		//easyPrint(temp);
 		
 		while(temp.contains('('))
 		{
@@ -284,17 +281,14 @@ public class Model {
 			{
 				temp2.add(temp.get(i));
 			}
-			easyPrint(temp);
-			easyPrint(temp2);
 			temp.set(ind, runEquation(temp2, xVal));
-			easyPrint(temp);
 			for(int i = lastInd; i > ind; i--)
 			{
 				temp.remove(i);
 			}
-			easyPrint(temp);
 		}
-		//easyPrint(temp);
+		
+		
 		//Calculate ^
 		while(temp.contains('^'))
 		{
@@ -365,7 +359,6 @@ public class Model {
 			temp.remove(ind+1);
 			temp.remove(ind-1);
 		}
-		//easyPrint(temp);
 		return (double) temp.get(0);
 	}
 	
