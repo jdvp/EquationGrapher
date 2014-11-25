@@ -3,6 +3,13 @@ package model;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+/**
+ * This is the Model of the equation. It maintains an integer
+ * representation of the space to be drawn, pixel wise
+ * 
+ * @author JD Porterfield
+ *
+ */
 public class Model {
 
 	private String equation;
@@ -13,13 +20,17 @@ public class Model {
 	private int width;
 	private int height;
 	
-	private Integer globalX = 1;
-	private Integer globalY = globalX.intValue();
-	
-	public Model(IM2VAdapter nullObject) {
-		myAdapter = nullObject;
+	/**
+	 * Instantiates the model and sets the adapter
+	 * @param adapter
+	 */
+	public Model(IM2VAdapter adapter) {
+		myAdapter = adapter;
 	}
 
+	/**
+	 * No-op start method
+	 */
 	public void start() {
 		
 	}
@@ -138,7 +149,7 @@ public class Model {
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
 			{
 				String me = "" + (char) a;
-				if(me.matches("[x+-/*^()]"))
+				if(me.matches("[x+-/*^()epl]"))
 				{
 					tempEq.add(a);
 				}
@@ -272,6 +283,19 @@ public class Model {
 			}
 		}
 		
+		//Allow for e and pi 
+		while(temp.contains('e'))
+		{
+			int ind = temp.indexOf('e');
+			temp.set(ind, Math.E);
+		}
+		while(temp.contains('p'))
+		{
+			int ind = temp.indexOf('p');
+			temp.set(ind, Math.PI);
+		}
+		
+		//Deal with parantheses sections
 		while(temp.contains('('))
 		{
 			int ind = temp.indexOf('(');
@@ -301,6 +325,15 @@ public class Model {
 			//in order to preserve index order for first
 			temp.remove(ind+1);
 			temp.remove(ind-1);
+		}
+		
+		//Calculate ln(x)
+		while(temp.contains('l'))
+		{
+			int ind = temp.indexOf('l');
+			Double a = (Double) temp.get(ind+1);
+			temp.set(ind, Math.log(a));
+			temp.remove(ind+1);
 		}
 		
 		//Calculate *
@@ -362,19 +395,19 @@ public class Model {
 		return (double) temp.get(0);
 	}
 	
-	/**
-	 * A method to make debugging easier.
-	 * 
-	 * @param args The things you want to print
-	 */
-	private void easyPrint(Object ... args)
-	{
-		String retVal = "";
-		for(Object a: args)
-		{
-			retVal += a.toString() + " ";
-		}
-		System.out.println(retVal);
-	}
+//	/**
+//	 * A method to make debugging easier.
+//	 * 
+//	 * @param args The things you want to print
+//	 */
+//	private void easyPrint(Object ... args)
+//	{
+//		String retVal = "";
+//		for(Object a: args)
+//		{
+//			retVal += a.toString() + " ";
+//		}
+//		System.out.println(retVal);
+//	}
 
 }

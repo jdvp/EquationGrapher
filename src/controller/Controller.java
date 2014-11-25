@@ -7,16 +7,16 @@ import model.Model;
 import view.IV2MAdapter;
 import view.View;
 
-
+/**
+ * This is the Controller of the system.
+ * It is responsible for maintaining the 
+ * interactions between the model and view
+ * 
+ * @author JD Porterfield
+ *
+ */
 public class Controller{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3922672287928066483L;
-	/**
-	 * 
-	 */
 	private Model model = new Model(IM2VAdapter.NULL_OBJECT);
 	private View view = new View(IV2MAdapter.NULL_OBJECT);
 	
@@ -36,13 +36,18 @@ public class Controller{
 		});
 	}
 
+	/**
+	 * Start the model and view
+	 */
 	protected void start() {
 		model.start();
 		view.start();
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructor that creates the model and view
+	 * and sets their adapter objects
+	 * 
 	 */
 	public Controller() {
 		model = new Model(new IM2VAdapter(){
@@ -63,15 +68,14 @@ public class Controller{
 
 			@Override
 			public void calculate(int lx, int ux, int ly, int uy,
-					String equation, int px, int py) {
+					String equation) {
 				model.calculate(lx, ux, ly, uy, equation);
 				
 			}
 
 
 			@Override
-			public void calculateAxes(int lx, int ux, int ly, int uy,
-					String equation, int windowX, int windowY) {
+			public void calculateAxes(int lx, int ux, int ly, int uy, int windowX, int windowY) {
 				model.calculateAxes(lx, ux, ly, uy, windowX,windowY);
 			}
 			

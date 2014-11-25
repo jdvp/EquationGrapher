@@ -24,23 +24,22 @@ public interface IV2MAdapter {
 	  
 
 		@Override
-		public void calculate(int lx, int ux, int ly, int uy, String equation, int px, int py) {
+		public void calculate(int lx, int ux, int ly, int uy, String equation) {
 			// TODO Auto-generated method stub
 			
 		}
 		
 		@Override
-		public void calculateAxes(int lx, int ux, int ly, int uy, String equation, int px, int py) {
+		public void calculateAxes(int lx, int ux, int ly, int uy, int px, int py) {
 			// TODO Auto-generated method stub
 			
 		}
 	};
 
 
-	public void calculate(int lx, int ux, int ly, int uy, String equation, int px, int py);
+	public void calculate(int lx, int ux, int ly, int uy, String equation);
 
 
-	public void calculateAxes(int lx, int ux, int ly, int uy, String equation,
-			int windowX, int windowY);
+	public void calculateAxes(int lx, int ux, int ly, int uy, int windowX, int windowY);
 
 }

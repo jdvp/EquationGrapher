@@ -1,22 +1,27 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.Window.Type;
-
+/**
+ * This is the view of the system.
+ * It allows a user to input equations and interact with the model
+ * 
+ * @author JD Porterfield
+ *
+ */
 public class View extends JFrame{
 
 	private static final long serialVersionUID = -6902165796914041718L;
@@ -30,9 +35,6 @@ public class View extends JFrame{
 	private JTextField upperYBound;
 	private JPanel pnlDisplay = new JPanel() {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -708326350965762632L;
 
 		/**
@@ -41,13 +43,20 @@ public class View extends JFrame{
 		 * @param g, The Graphics object to paint on.
 		 **/
 		public void paintComponent(Graphics g) {
-			super.paintComponent(g); // Do everything normally done first,
+			super.paintComponent(g); 
+			// Do everything normally done first
 			// e.g. clear the screen.
 			myAdapter.updateGraph(g);
 		}
 	};;
 	private JButton btnGraph;
 	
+	/**
+	 * Constructor for the view.
+	 * Sets the adapter and creates the frame,
+	 * initializing the GUI.
+	 * @param adapter
+	 */
 	public View(IV2MAdapter adapter)
 	{
 		setType(Type.UTILITY);
@@ -62,6 +71,9 @@ public class View extends JFrame{
 		myAdapter = adapter;
 	}
 	
+	/**
+	 * Initializes the GUI components
+	 */
 	public void initGUI()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,19 +142,26 @@ public class View extends JFrame{
 		contentPane.add(pnlDisplay, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Determines the Axes prior to an equation being input
+	 */
 	protected void determineAxes() {
 		int lx = Integer.parseInt(lowerXBound.getText());
 		int ux = Integer.parseInt(upperXBound.getText());
 		int ly = Integer.parseInt(lowerYBound.getText());
 		int uy = Integer.parseInt(upperYBound.getText());
-		String equation = txtEquation.getText();
 		
 		int windowX = pnlDisplay.getWidth();
 		int windowY = pnlDisplay.getHeight();
 		
-		myAdapter.calculateAxes(lx,ux,ly,uy,equation, windowX, windowY);		
+		myAdapter.calculateAxes(lx,ux,ly,uy, windowX, windowY);		
 	}
 	
+	/**
+	 * Calls on the model to calculate all of the pixels that
+	 * need to be drawn on as specified by the equation and 
+	 * given bounds
+	 */
 	protected void chart() {
 		int lx = Integer.parseInt(lowerXBound.getText());
 		int ux = Integer.parseInt(upperXBound.getText());
@@ -150,36 +169,21 @@ public class View extends JFrame{
 		int uy = Integer.parseInt(upperYBound.getText());
 		String equation = txtEquation.getText();
 		
-		int windowX = pnlDisplay.getWidth();
-		int windowY = pnlDisplay.getHeight();
-		
-		myAdapter.calculate(lx,ux,ly,uy,equation, windowX, windowY);		
+		myAdapter.calculate(lx,ux,ly,uy,equation);		
 	}
 
+	/**
+	 * Starts the component, allowing the user to interact.
+	 */
 	public void start() {
 		setVisible(true);
 	}
 	
+	/**
+	 * Calls on the display panel to be repainted.
+	 */
 	public void update()
 	{
 		pnlDisplay.repaint();
 	}
-	
-	/**
-	 * Useful for debugging multiple variables at a time
-	 * This is better than having to call println and manually add the
-	 * variables with spacing between them
-	 * 
-	 * @param args The variables to be printed
-	 */
-	private void easyPrint(Object ... args)
-	{
-		String retVal = "";
-		for(Object a: args)
-		{
-			retVal += a.toString() + " ";
-		}
-		System.out.println(retVal);
-	}
-
 }

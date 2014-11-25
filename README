@@ -1,0 +1,43 @@
+Equation Grapher
+
+Use this program to see what a certain x vs y function looks like!
+In order to graph an equation, you must enter the x and y bounds
+as well as the equation itself.
+Once an equation is entered, press "Graph" and the graph will be 
+displayed in the panel.
+Available Symbols:
+	Numeric Symbols: 0123456789
+		Because we are doing math, we need numbers
+	'x'
+		so that you can graph vs an unknown
+		y = x
+	'(' and ')' 
+		in order to separate clauses, etc.
+		y = (x + x) + x
+	'^'
+		exponents
+		y = x^2
+	'*','/','+','-'
+		the basic math operators
+		y = x * 2
+		y = 2 / x
+		y = 1 + 1
+		y = x - 4
+	'e'
+		the mathematical e
+		y = e^x
+	'p'
+		represents pi
+		y = p*2
+	'l' 
+		represents the natural log
+		takes the natural log of the element immendiately after it
+			make sure to put necessary parantheses in
+		y = lx
+	
+Notes:
+	Must have an operator between numeric symbols/values
+		The exception to this is l in which case lx works
+		
+	
+	
