@@ -24,27 +24,46 @@ public class Model {
 		
 	}
 
-	
-	public void calculate(int lx, int ux, int ly, int uy, String inEq, int px, int py) {
+	/**
+	 * Graphs an equation based upon the many inputs specified by the user
+	 * 
+	 * @param lx The lower x bound
+	 * @param ux The upper x bound
+	 * @param ly The lower y bound
+	 * @param uy The upper y bound
+	 * @param inEq The equation to calculate for
+	 */
+	public void calculate(int lx, int ux, int ly, int uy, String inEq) {
 		
-		calculateAxes(lx,ux,ly,uy,inEq,px,py);
-		easyPrint(eq);
+		//calculateAxes(lx,ux,ly,uy,inEq,px,py);
+		//easyPrint(eq);
+		equation = inEq;
+		
 		reduceEquation();
-		easyPrint(eq);
+		//easyPrint(eq);
 		removeExtraCharacters();
-		easyPrint(eq);
+		//easyPrint(eq);
 		initXPixels(lx, ux);
 		doEquation(ly, uy);
 		myAdapter.update();
 		
 	}
 
-	public void calculateAxes(int lx, int ux, int ly, int uy, String inEq, int px, int py)
+	/**
+	 * Used to calculate the axes before an equation is input
+	 * 
+	 * @param lx The lower x bound
+	 * @param ux The upper x bound
+	 * @param ly The lower y bound
+	 * @param uy The upper y bound
+	 * @param px The width of the component to paint on
+	 * @param py The height of the component to paint on
+	 */
+	public void calculateAxes(int lx, int ux, int ly, int uy, int px, int py)
 	{
 		width = px;
 		height = py;
 		
-		equation = inEq;
 		pixels = new int[px][py];
 		
 		for(int x = 0; x < px; x++)
@@ -60,6 +79,14 @@ public class Model {
 		for(int y = 0; y<height; y++)
 			pixels[xAxis][y] = 1;
 	}
+	
+	/**
+	 * Updates the graph based on the array of pixels.
+	 * If a pixel value is 1, the pixel is filled.
+	 * Otherwise, it is not.
+	 * 
+	 * @param g The graphics objects to paint onto.
+	 */
 	public void updateGraph(Graphics g) {
 		if(pixels != null)
 		{
@@ -70,6 +97,12 @@ public class Model {
 		}
 	}
 
+	/**
+	 * Takes the equation arraylist and combines all numbers in 
+	 * the arraylist. Since the numbers in the arraylist are input 
+	 * characterwise, we need to convert individual input characters
+	 * into actual numbers. 
+	 */
 	public void reduceEquation()
 	{
 		eq = new ArrayList<Object>();
@@ -95,6 +128,11 @@ public class Model {
 			eq.add(num);
 	}
 	
+	/**
+	 * Takes the equation arraylist and removes 
+	 * all extraneous characters. That is any character
+	 * that is not allowed in the equation.
+	 */
 	public void removeExtraCharacters()
 	{
 		ArrayList<Object> tempEq = new ArrayList<Object>();
@@ -115,6 +153,14 @@ public class Model {
 		eq = tempEq;
 	}
 	
+	/**
+	 * Creates an array xPixels that represents the x value for every pixel
+	 * that will be utilized on the canvas. If there are 10 values (0-9) and 
+	 * 10 pixels for instance, xPixels = {0,1,2,3,4,5,6,7,8,9}
+	 * 
+	 * @param lx The lower x bound
+	 * @param ux The upper x bound
+	 */
 	public void initXPixels(int lx, int ux)
 	{
 		xPixels = new ArrayList<Double>();
@@ -143,13 +189,18 @@ public class Model {
 				closestToZeroIndex = x;
 			}
 		}
-		
+		easyPrint("Closest to zero", closestToZeroIndex);
 		//If there is no zero in the x range, grpahing will not work properly
 		//Therefore, we set the lowest value in the x range to zero
 		xPixels.set(closestToZeroIndex, 0.0);
 		
-		easyPrint(xPixels);
+		for(int a = 0; a < height; a ++)
+			pixels[closestToZeroIndex][a] = 1;
+		//easyPrint(xPixels);
 		
+		
+		int closestToZeroIndexY = -1;
+		closestVal = Double.POSITIVE_INFINITY;
 		
 		//For every x value, calculate a y value
 		for(int x = 0; x < width; x++)
@@ -157,10 +208,10 @@ public class Model {
 			double myVal = xPixels.get(x);
 			double yVal = runEquation(myVal);
 			
-			if(yVal == 0)
+			if(Math.abs(yVal) < closestVal)
 			{
-				for(int a = 0; a < height; a++)
-					pixels[x][a] =  1;
+				closestToZeroIndexY = x;
+				closestVal = Math.abs(yVal);
 			}
 			
 			//Make sure y is graphable and then graph it
@@ -179,14 +230,31 @@ public class Model {
 			}
 		}
 		
+		for(int x = 0; x<width; x++)
+			pixels[x][valueToPixel(0, ly, uy)] = 1;
 	}
 	
+	/**
+	 * Takes an input double and returns the pixel number that corresponds
+	 * to the pixel that should display that value
+	 * 
+	 * @param value The value to convert
+	 * @param ly The lower y bound
+	 * @param uy The upper y bound
+	 * @return The pixel that corresponds to 'value'
+	 */
 	public int valueToPixel(double value, int ly, int uy)
 	{
 		//easyPrint(value, ly, uy);
 		return height - (int)((height * (value - 1.0 * ly))/(1.0 *uy - 1.0 * ly));
 	}
 	
+	/**
+	 * Parses the equation for one particular value of x
+	 *  
+	 * @param xVal The value to determine a y value for
+	 * @return y the value that corresponds to f(x)
+	 */
 	public double runEquation(double xVal)
 	{
 		ArrayList<Object> temp = new ArrayList<Object>();
@@ -279,10 +347,15 @@ public class Model {
 			temp.remove(ind+1);
 			temp.remove(ind-1);
 		}
-		easyPrint(temp);
+		//easyPrint(temp);
 		return (double) temp.get(0);
 	}
 	
+	/**
+	 * A method to make debugging easier.
+	 * 
+	 * @param args The things you want to print
+	 */
 	private void easyPrint(Object ... args)
 	{
 		String retVal = "";

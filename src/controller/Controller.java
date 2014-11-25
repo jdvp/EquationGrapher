@@ -64,7 +64,7 @@ public class Controller{
 			@Override
 			public void calculate(int lx, int ux, int ly, int uy,
 					String equation, int px, int py) {
-				model.calculate(lx, ux, ly, uy, equation,px,py);
+				model.calculate(lx, ux, ly, uy, equation);
 				
 			}
 
@@ -72,7 +72,7 @@ public class Controller{
 			@Override
 			public void calculateAxes(int lx, int ux, int ly, int uy,
 					String equation, int windowX, int windowY) {
-				model.calculateAxes(lx, ux, ly, uy, equation,windowX,windowY);
+				model.calculateAxes(lx, ux, ly, uy, windowX,windowY);
 			}
 			
 		});
