@@ -26,14 +26,14 @@ Available Symbols:
 	'e'
 		the mathematical e
 		y = e^x
-	'p'
+	'pi'
 		represents pi
 		y = p*2
-	'l' 
+	'ln' 
 		represents the natural log
 		takes the natural log of the element immendiately after it
 			make sure to put necessary parantheses in
-		y = lx
+		y = lnx or y = ln(x+2)
 	
 Notes:
 	Must have an operator between numeric symbols/values
