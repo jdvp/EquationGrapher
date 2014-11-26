@@ -38,9 +38,7 @@ Available Symbols:
 Notes:
 	Must have an operator between numeric symbols/values
 		The exception to this is l in which case lx works
-	Can't have only a negative numeber currently
-		Instead of y = -x, type y = 0-x
 	For only zero values, only use one zero or nothing will graph properly
-		I.e. y = 0 -x not y = 00 - x
+		I.e. y = x - 0 works whereas y = x - 00 will not
 	
 	

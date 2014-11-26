@@ -391,14 +391,23 @@ public class Model {
 		while(temp.contains('-'))
 		{
 			int ind = temp.indexOf('-');
-			Double a = (Double) temp.get(ind-1);
-			Double b = (Double) temp.get(ind+1);
-			temp.set(ind, a - b);
-			
-			//remove the latter number first
-			//in order to preserve index order for first
-			temp.remove(ind+1);
-			temp.remove(ind-1);
+			if(ind != 0)
+			{
+				Double a = (Double) temp.get(ind-1);
+				Double b = (Double) temp.get(ind+1);
+				temp.set(ind, a - b);
+				
+				//remove the latter number first
+				//in order to preserve index order for first
+				temp.remove(ind+1);
+				temp.remove(ind-1);
+			}
+			else
+			{
+				Double a = (Double) temp.get(ind+1);
+				temp.set(ind, a * -1.0);
+				temp.remove(ind+1);
+			}
 		}
 		return (double) temp.get(0);
 	}
