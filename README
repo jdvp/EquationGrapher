@@ -38,8 +38,6 @@ Available Symbols:
 Notes:
 	Must have an operator between numeric symbols/values
 		The exception to this is l in which case lx works
-	Don't use leading zeros
-		x - 7 works but x - 007 will not
 	
 	
 	
