@@ -122,12 +122,13 @@ public class Model {
 			{
 				num*=10;
 				num += Integer.parseInt(""+a);
-				
+				if(num == 0 && me == 48)
+					eq.add(0);
 			}
 			else
 			{
 				if(num!=0)
-					eq.add(num);
+					eq.add(num);					
 				num=0;
 				eq.add(a);
 			}
@@ -149,7 +150,7 @@ public class Model {
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
 			{
 				String me = "" + (char) a;
-				if(me.matches("[x+-/*^()epl]"))
+				if(me.matches("[x+-/*^()0epl]"))
 				{
 					tempEq.add(a);
 				}
@@ -262,7 +263,7 @@ public class Model {
 		ArrayList<Object> temp = new ArrayList<Object>();
 		
 		//Replace x with its value
-		
+		easyPrint(equation);
 		for(Object a: equation)
 		{
 			if(a.getClass().toString().equalsIgnoreCase("class java.lang.Character"))
@@ -295,6 +296,13 @@ public class Model {
 			temp.set(ind, Math.PI);
 		}
 		
+		easyPrint(temp);
+		//Errors with adding 0
+		while(temp.contains('0'))
+		{
+			int ind = temp.indexOf('0');
+			temp.set(ind, (Double) 0.0);
+		}
 		//Deal with parantheses sections
 		while(temp.contains('('))
 		{
@@ -400,14 +408,14 @@ public class Model {
 //	 * 
 //	 * @param args The things you want to print
 //	 */
-//	private void easyPrint(Object ... args)
-//	{
-//		String retVal = "";
-//		for(Object a: args)
-//		{
-//			retVal += a.toString() + " ";
-//		}
-//		System.out.println(retVal);
-//	}
+	private void easyPrint(Object ... args)
+	{
+		String retVal = "";
+		for(Object a: args)
+		{
+			retVal += a.toString() + " ";
+		}
+		System.out.println(retVal);
+	}
 
 }
