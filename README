@@ -28,7 +28,7 @@ Available Symbols:
 		y = e^x
 	'pi'
 		represents pi
-		y = p*2
+		y = pi*2
 	'ln' 
 		represents the natural log
 		takes the natural log of the element immendiately after it
@@ -38,7 +38,8 @@ Available Symbols:
 Notes:
 	Must have an operator between numeric symbols/values
 		The exception to this is l in which case lx works
-	For only zero values, only use one zero or nothing will graph properly
-		I.e. y = x - 0 works whereas y = x - 00 will not
+	Don't use leading zeros
+		x - 7 works but x - 007 will not
+	
 	
 	
