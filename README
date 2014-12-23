@@ -37,7 +37,10 @@ Available Symbols:
 	
 Notes:
 	Must have an operator between numeric symbols/values
-		The exception to this is l in which case lx works
+		The exception to this is ln in which case lnx works
 	
+	Don't use decimal values :o
 	
+	When resizing, you must press 'Graph' again if you had
+	previously been viewing an equation to make it reappear
 	

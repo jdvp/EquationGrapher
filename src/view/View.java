@@ -24,15 +24,39 @@ import javax.swing.border.EmptyBorder;
  */
 public class View extends JFrame{
 
-	private static final long serialVersionUID = -6902165796914041718L;
 	
+	private static final long serialVersionUID = -6902165796914041718L;
+	/**
+	 * The adapter that the view uses to communicate with the model
+	 */
 	private IV2MAdapter myAdapter = IV2MAdapter.NULL_OBJECT;
+	/**
+	 * The panel used to hold the rest of the GUI elements of the system
+	 */
 	private JPanel contentPane;
+	/**
+	 * The text field used to enter an equation
+	 */
 	private JTextField txtEquation;
+	/**
+	 * The text field used to enter the lower x axis bound
+	 */
 	private JTextField lowerXBound;
+	/**
+	 * The text field used to enter the upper x axis bound
+	 */
 	private JTextField upperXBound;
+	/**
+	 * The text field used to enter the lower y axis bound
+	 */
 	private JTextField lowerYBound;
+	/**
+	 * The text field used to enter the upper y axis bound
+	 */
 	private JTextField upperYBound;
+	/**
+	 * The panel used to display the parsed equation
+	 */
 	private JPanel pnlDisplay = new JPanel() {
 
 		private static final long serialVersionUID = -708326350965762632L;

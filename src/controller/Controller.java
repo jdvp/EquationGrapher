@@ -17,7 +17,13 @@ import view.View;
  */
 public class Controller{
 
+	/**
+	 * The model of the system
+	 */
 	private Model model = new Model(IM2VAdapter.NULL_OBJECT);
+	/**
+	 * The view of the system
+	 */
 	private View view = new View(IV2MAdapter.NULL_OBJECT);
 	
 	/**

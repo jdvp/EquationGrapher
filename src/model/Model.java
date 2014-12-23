@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
 /**
@@ -12,13 +13,38 @@ import java.util.ArrayList;
  */
 public class Model {
 
+	/**
+	 * A String representation of the equation to be parsed and displayed
+	 */
 	private String equation;
+	/**
+	 * An ArrayList representation of the equation to be parsed and displayed
+	 */
 	private ArrayList<Object> eq = new ArrayList<Object>();
+	/**
+	 * An array representation of all of the pixels in the view
+	 */
 	private int pixels[][];
+	/**
+	 * The double value assigned to each pixel along the x axis
+	 */
 	private ArrayList<Double> xPixels;
+	/**
+	 * The adapter the model uses to communicate with the view
+	 */
 	private IM2VAdapter myAdapter;
+	/**
+	 * The width of the view in pixels
+	 */
 	private int width;
+	/**
+	 * The height of the view in pixels
+	 */
 	private int height;
+	/**
+	 * An ArrayList of Points representing the pixel coordinates that the equation touches
+	 */
+	ArrayList<Point> equationPoints = new ArrayList<Point>();
 	
 	/**
 	 * Instantiates the model and sets the adapter
@@ -30,7 +56,8 @@ public class Model {
 	}
 
 	/**
-	 * No-op start method
+	 * No-op start method since the model needs input from the
+	 * view in order to graph anything
 	 */
 	public void start() 
 	{
@@ -47,6 +74,7 @@ public class Model {
 	 */
 	public void calculate(int lx, int ux, int ly, int uy, String inEq) 
 	{
+		equationPoints = new ArrayList<Point>();
 		equation = inEq;
 		reduceEquation();
 		removeExtraCharacters();
@@ -67,6 +95,8 @@ public class Model {
 	 */
 	public void calculateAxes(int lx, int ux, int ly, int uy, int px, int py) 
 	{
+
+		equationPoints = new ArrayList<Point>();
 		
 		//Use the details of the system to calculate which pixels are axes
 		width = px;
@@ -97,11 +127,24 @@ public class Model {
 	 */
 	public void updateGraph(Graphics g) 
 	{
+		//Draw Axes
 		if(pixels != null) {
 			for(int x = 0 ; x < width; x++)
 				for(int y = 0; y < height; y++)
-					if(pixels[x][y] == 1)
+					if(pixels[x][y] == 1) 
 						g.drawLine(x, y, x, y);
+		}
+		
+		//Draw Equation
+		int count = 0;
+		for(Point p : equationPoints){
+			if(count!=0){
+				g.drawLine((int)p.getX(), (int)p.getY(), (int)equationPoints.get(count-1).getX(), (int)equationPoints.get(count-1).getY());
+			}
+			else{
+				g.drawLine((int)p.getX(), (int)p.getY(), (int)p.getX(), (int)p.getY());
+			}
+			count++;
 		}
 	}
 
@@ -232,7 +275,9 @@ public class Model {
 			if(yVal >= ly && yVal <= uy) {
 				int myPixelVal = valueToPixel(yVal, ly, uy);
 				if(myPixelVal >=0 && myPixelVal < height) {
-					pixels[x][myPixelVal] = 1;
+					//pixels[x][myPixelVal] = 1;
+					Point thisPoint = new Point(x, myPixelVal);
+					equationPoints.add(thisPoint);
 				}
 			}
 		}
@@ -265,6 +310,7 @@ public class Model {
 	 */
 	public double runEquation(ArrayList<Object> equation, double xVal) 
 	{
+		easyPrint(equation);
 		ArrayList<Object> temp = new ArrayList<Object>();
 		
 		//Replace x with its value
@@ -324,7 +370,8 @@ public class Model {
 			temp.remove(ind+1);
 			temp.remove(ind-1);
 		}
-		
+
+		easyPrint("after exp",temp);
 		//Calculate ln(x)
 		while(temp.contains('l')) {
 			int ind = temp.indexOf('l');
@@ -345,7 +392,8 @@ public class Model {
 			temp.remove(ind+1);
 			temp.remove(ind-1);
 		}
-		
+
+		easyPrint("after mult",temp);
 		//Calculate *
 		while(temp.contains('/')) {
 			int ind = temp.indexOf('/');
@@ -377,6 +425,7 @@ public class Model {
 				temp.remove(ind);
 			}
 		}
+		easyPrint("after add",temp);
 		
 		//Calculate -
 		while(temp.contains('-'))
@@ -398,6 +447,8 @@ public class Model {
 				temp.remove(ind+1);
 			}
 		}
+		easyPrint("after subtract",temp);
+		
 		return (double) temp.get(0);
 	}
 	
@@ -406,15 +457,15 @@ public class Model {
 //	 * 
 //	 * @param args The things you want to print
 //	 */
-//	private void easyPrint(Object ... args)
-//	{
-//		String retVal = "";
-//		for(Object a: args)
-//		{
-//			retVal += a.toString() + " ";
-//		}
-//		System.out.println(retVal);
-//	}
+	private void easyPrint(Object ... args)
+	{
+		String retVal = "";
+		for(Object a: args)
+		{
+			retVal += a.toString() + " ";
+		}
+		System.out.println(retVal);
+	}
 	
 	/**
 	 * Determines whether an Object is an integer
